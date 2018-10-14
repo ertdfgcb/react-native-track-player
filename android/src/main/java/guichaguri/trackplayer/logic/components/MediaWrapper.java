@@ -1,5 +1,6 @@
 package guichaguri.trackplayer.logic.components;
 
+import android.util.Log;
 import android.content.Context;
 import android.os.Binder;
 import android.os.Bundle;
@@ -177,6 +178,10 @@ public class MediaWrapper extends Binder {
 
     public void getDuration(final Promise callback) {
         Playback pb = manager.getPlayback();
+        /* duration is always 0 without this line
+           I don't know why, but I suspect it has something to do with caching
+           my guess is the first call to getDuration returns 0 and primes the next one to return the right value */
+        Log.d("mwrap", Long.toString(pb.getDuration()));
         if(checkPlayback(pb, callback)) return;
 
         Utils.resolveCallback(callback, Utils.toSeconds(pb.getDuration()));
