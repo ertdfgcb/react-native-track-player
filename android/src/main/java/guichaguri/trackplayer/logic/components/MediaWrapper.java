@@ -178,9 +178,11 @@ public class MediaWrapper extends Binder {
 
     public void getDuration(final Promise callback) {
         Playback pb = manager.getPlayback();
-        /* duration is always 0 without this line
-           I don't know why, but I suspect it has something to do with caching
-           my guess is the first call to getDuration returns 0 and primes the next one to return the right value */
+        /* duration is always 0 without this line, I think not everything is loaded until after the first call
+           the value comes from trackplayer/player/players/AndroidPlayback.java
+           the getDuration function in that file returns 0 if a loaded variable is false
+           that variable seems to always be false on the first call, but afterwards it's not and getDuration works as expected
+           I'm not sure why multiple calls from react don't work but multiple calls from this function does */
         Log.d("mwrap", Long.toString(pb.getDuration()));
         if(checkPlayback(pb, callback)) return;
 
